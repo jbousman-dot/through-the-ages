@@ -249,6 +249,41 @@ function renderStats() {
     `;
 }
 
+// --- Leaderboard ---
+async function renderLeaderboard() {
+    const list = document.getElementById("leaderboard-list");
+    list.innerHTML = '<div class="leaderboard-loading">Loading...</div>';
+
+    const entries = await getLeaderboard(20);
+
+    if (entries.length === 0) {
+        list.innerHTML = '<div class="leaderboard-empty">No entries yet. Be the first!</div>';
+        return;
+    }
+
+    let html = '<div class="leaderboard-table">';
+    html += '<div class="lb-header"><span>#</span><span>Player</span><span>Era</span><span>Knowledge</span></div>';
+
+    for (const entry of entries) {
+        const eraName = ERAS[entry.highestEra] ? ERAS[entry.highestEra].name : "?";
+        const highlight = entry.isCurrentUser ? ' lb-current' : '';
+        html += `<div class="lb-row${highlight}">
+            <span class="lb-rank">${entry.rank}</span>
+            <span class="lb-name">${escapeHtml(entry.displayName || 'Anonymous')}</span>
+            <span class="lb-era">${eraName}</span>
+            <span class="lb-score">${formatNumber(entry.totalKnowledge)}</span>
+        </div>`;
+    }
+    html += '</div>';
+    list.innerHTML = html;
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 // --- Number Formatting ---
 function formatNumber(n) {
     if (typeof n !== "number" || isNaN(n)) return "0";

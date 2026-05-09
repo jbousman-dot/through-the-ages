@@ -8,6 +8,10 @@
     <meta name="theme-color" content="#2c1810">
     <title>Through the Ages</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Firebase SDK (compat mode for simplicity) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="game-container">
@@ -74,9 +78,24 @@
                     <div id="stats-content"></div>
                 </div>
                 <div class="settings-section">
+                    <h3>Player Name</h3>
+                    <div class="name-input-row">
+                        <input type="text" id="display-name-input" class="name-input" placeholder="Anonymous" maxlength="20">
+                        <button class="settings-btn" id="set-name-btn">Set</button>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Leaderboard</h3>
+                    <div id="leaderboard-content" class="leaderboard-container">
+                        <button class="settings-btn" id="refresh-leaderboard-btn">🏆 Load Leaderboard</button>
+                        <div id="leaderboard-list"></div>
+                    </div>
+                </div>
+                <div class="settings-section">
                     <h3>Data</h3>
                     <div class="settings-buttons">
                         <button class="settings-btn" id="save-btn">💾 Save Game</button>
+                        <button class="settings-btn" id="cloud-save-btn">☁️ Save to Cloud</button>
                         <button class="settings-btn" id="export-btn">📋 Export Save</button>
                         <button class="settings-btn" id="import-btn">📥 Import Save</button>
                         <button class="settings-btn danger" id="reset-btn">🗑️ Reset All Progress</button>
@@ -123,6 +142,7 @@
     <script src="js/upgrades.js"></script>
     <script src="js/prestige.js"></script>
     <script src="js/achievements.js"></script>
+    <script src="js/firebase-sync.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/tutorial.js"></script>
     <script src="js/main.js"></script>

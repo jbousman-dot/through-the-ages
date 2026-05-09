@@ -51,6 +51,9 @@ const GameState = {
     // --- Tutorial ---
     tutorialStep: 0,
     tutorialComplete: false,
+
+    // --- Cloud ---
+    displayName: "",
 };
 
 // Era definitions
@@ -156,6 +159,7 @@ function saveGame() {
         eraStartTime: GameState.eraStartTime,
         tutorialStep: GameState.tutorialStep,
         tutorialComplete: GameState.tutorialComplete,
+        displayName: GameState.displayName,
     };
     try {
         localStorage.setItem("throughTheAges_save", JSON.stringify(data));

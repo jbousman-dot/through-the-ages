@@ -1,0 +1,12 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "leaderboard",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "highestEra", "order": "DESCENDING" },
+        { "fieldPath": "totalKnowledge", "order": "DESCENDING" }
+      ]
+    }
+  ]
+}

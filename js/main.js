@@ -41,6 +41,9 @@ function gameLoop(timestamp) {
         saveGame();
     }
 
+    // Cloud sync
+    tickCloudSync(delta * 1000);
+
     // Update upgrade affordability if on inventions tab
     if (currentTab === "inventions") {
         renderUpgradeAffordability();
@@ -117,6 +120,11 @@ function init() {
         saveGame();
         showToast("Game saved!");
     });
+    document.getElementById("cloud-save-btn").addEventListener("click", () => {
+        saveGame();
+        saveToCloud().then(() => showToast("Saved to cloud!"));
+        updateLeaderboard();
+    });
     document.getElementById("export-btn").addEventListener("click", exportSave);
     document.getElementById("import-btn").addEventListener("click", () => {
         const data = prompt("Paste your save data:");
@@ -127,6 +135,17 @@ function init() {
             resetSave();
         }
     });
+
+    // Display name
+    const nameInput = document.getElementById("display-name-input");
+    nameInput.value = GameState.displayName || "";
+    document.getElementById("set-name-btn").addEventListener("click", () => {
+        setDisplayName(nameInput.value);
+        showToast("Name set: " + (GameState.displayName || "Anonymous"));
+    });
+
+    // Leaderboard
+    document.getElementById("refresh-leaderboard-btn").addEventListener("click", renderLeaderboard);
 
     // Tutorial dismiss
     document.getElementById("tutorial-overlay").addEventListener("click", (e) => {
@@ -146,6 +165,9 @@ function init() {
     if (!loaded || !GameState.tutorialComplete) {
         initTutorial();
     }
+
+    // Initialize Firebase (async, non-blocking)
+    initFirebase();
 
     // Start game loop
     requestAnimationFrame(gameLoop);
