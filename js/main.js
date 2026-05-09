@@ -136,8 +136,7 @@ function init() {
         }
     });
 
-    // Auth buttons
-    document.getElementById("sign-in-btn").addEventListener("click", signInWithGoogle);
+    // Auth button (sign out only — sign in handled by Cloudflare Access)
     document.getElementById("sign-out-btn").addEventListener("click", signOut);
 
     // Display name
