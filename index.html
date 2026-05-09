@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2c1810">
+    <title>Through the Ages</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="era-info">
+                <div class="era-name" id="era-name">🪨 Stone Age</div>
+                <div class="era-description" id="era-description">Survival through discovery</div>
+            </div>
+        </header>
+
+        <!-- Tab Panels -->
+        <div class="panels">
+            <!-- Main Panel -->
+            <div class="tab-panel active" id="panel-main">
+                <div class="resource-display">
+                    <div class="knowledge-label">Knowledge</div>
+                    <div class="knowledge-amount" id="knowledge-amount">0</div>
+                    <div class="knowledge-rate" id="knowledge-per-sec">0/sec from scholars</div>
+                    <div class="population-row">
+                        <span>👥</span>
+                        <span>Population: <span id="population-amount">0</span></span>
+                    </div>
+                </div>
+
+                <div class="discover-area">
+                    <button class="discover-btn" id="discover-btn">
+                        <span class="click-label">DISCOVER</span>
+                        <span class="click-value" id="knowledge-per-click">+1/click</span>
+                    </button>
+                </div>
+
+                <div class="auto-gen-info" id="auto-gen-info"></div>
+
+                <div class="era-progress">
+                    <div class="era-progress-label">
+                        <span>Era Progress</span>
+                        <span id="era-progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="era-progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <button class="advance-era-btn" id="advance-era-btn">
+                    <span id="advance-era-text">Advance to ⚔️ Bronze Age</span>
+                </button>
+            </div>
+
+            <!-- Inventions Panel -->
+            <div class="tab-panel" id="panel-inventions">
+                <div class="upgrade-list" id="upgrade-list"></div>
+            </div>
+
+            <!-- Legacy Panel -->
+            <div class="tab-panel" id="panel-legacy">
+                <div class="legacy-locked">
+                    <div class="lock-icon">🔒</div>
+                    <div class="lock-text">
+                        Legacy powers unlock after your civilization reaches the Classical era and undergoes a Cultural Revolution.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Panel -->
+            <div class="tab-panel" id="panel-settings">
+                <div class="settings-section">
+                    <h3>Statistics</h3>
+                    <div id="stats-content"></div>
+                </div>
+                <div class="settings-section">
+                    <h3>Data</h3>
+                    <div class="settings-buttons">
+                        <button class="settings-btn" id="save-btn">💾 Save Game</button>
+                        <button class="settings-btn" id="export-btn">📋 Export Save</button>
+                        <button class="settings-btn" id="import-btn">📥 Import Save</button>
+                        <button class="settings-btn danger" id="reset-btn">🗑️ Reset All Progress</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="tab-btn active" data-tab="main" id="tab-main">
+                <span class="tab-icon">🏠</span>
+                Main
+            </button>
+            <button class="tab-btn" data-tab="inventions" id="tab-inventions">
+                <span class="tab-icon">📜</span>
+                Inventions
+            </button>
+            <button class="tab-btn" data-tab="legacy">
+                <span class="tab-icon">🏛️</span>
+                Legacy
+            </button>
+            <button class="tab-btn" data-tab="settings">
+                <span class="tab-icon">⚙️</span>
+                Settings
+            </button>
+        </nav>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Tutorial Overlay -->
+    <div class="tutorial-overlay" id="tutorial-overlay">
+        <div class="tutorial-bubble">
+            <div id="tutorial-bubble"></div>
+            <button class="tutorial-dismiss" id="tutorial-dismiss">Skip Tutorial</button>
+        </div>
+    </div>
+
+    <!-- Scripts (order matters) -->
+    <script src="js/game-state.js"></script>
+    <script src="js/upgrades.js"></script>
+    <script src="js/prestige.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/tutorial.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

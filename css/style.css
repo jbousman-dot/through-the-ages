@@ -1,0 +1,571 @@
+/* ============================================================
+   style.css — Mobile-first responsive styles for Through the Ages
+   ============================================================ */
+
+:root {
+    --era-color: #8B7355;
+    --bg-card: rgba(255, 255, 255, 0.08);
+    --bg-card-hover: rgba(255, 255, 255, 0.12);
+    --text-primary: #f0e6d6;
+    --text-secondary: rgba(240, 230, 214, 0.7);
+    --text-dim: rgba(240, 230, 214, 0.4);
+    --accent: var(--era-color);
+    --success: #4ade80;
+    --danger: #ef4444;
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-primary);
+    background: linear-gradient(180deg, #2c1810 0%, #4a3728 40%, #6b5340 100%);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ---- Layout ---- */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* ---- Header ---- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    flex-shrink: 0;
+}
+
+.era-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.era-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.era-description {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* ---- Tab Panels ---- */
+.panels {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.tab-panel {
+    position: absolute;
+    inset: 0;
+    padding: 16px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tab-panel.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ---- Main Panel ---- */
+.resource-display {
+    text-align: center;
+    padding: 20px 0 10px;
+}
+
+.knowledge-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.knowledge-amount {
+    font-size: 2.8rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.knowledge-rate {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.population-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* ---- Discover Button ---- */
+.discover-area {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.discover-btn {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 3px solid var(--era-color);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+    box-shadow: 0 0 20px rgba(139, 115, 85, 0.2);
+}
+
+.discover-btn:active {
+    transform: scale(0.93);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 30px rgba(139, 115, 85, 0.4);
+}
+
+.discover-btn .click-label {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
+
+.discover-btn .click-value {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.auto-gen-info {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+/* ---- Era Progress ---- */
+.era-progress {
+    margin: 20px 0 10px;
+    padding: 0 8px;
+}
+
+.era-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--era-color), var(--era-color));
+    transition: width 0.3s ease;
+    min-width: 0;
+}
+
+/* ---- Advance Era Button ---- */
+.advance-era-btn {
+    display: none;
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border: 2px solid var(--success);
+    border-radius: var(--radius);
+    background: rgba(74, 222, 128, 0.1);
+    color: var(--success);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.advance-era-btn.visible {
+    display: block;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(74, 222, 128, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(74, 222, 128, 0.4); }
+}
+
+/* ---- Upgrade Cards ---- */
+.upgrade-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 20px;
+}
+
+.upgrade-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    text-align: left;
+    width: 100%;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.upgrade-card:active:not(.maxed) {
+    transform: scale(0.98);
+}
+
+.upgrade-card.affordable {
+    border-color: var(--era-color);
+    background: var(--bg-card-hover);
+}
+
+.upgrade-card.maxed {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.upgrade-card.purchase-flash {
+    background: rgba(74, 222, 128, 0.2) !important;
+}
+
+.upgrade-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+}
+
+.upgrade-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.upgrade-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.upgrade-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.upgrade-flavor {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.upgrade-cost-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.upgrade-cost {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--success);
+}
+
+.upgrade-cost.too-expensive {
+    color: var(--danger);
+}
+
+.upgrade-maxed {
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.upgrade-count {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+/* ---- Settings Panel ---- */
+.settings-section {
+    margin-bottom: 24px;
+}
+
+.settings-section h3 {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.85rem;
+}
+
+.stat-row span:first-child {
+    color: var(--text-secondary);
+}
+
+.settings-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-btn {
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.settings-btn:active {
+    background: var(--bg-card-hover);
+}
+
+.settings-btn.danger {
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--danger);
+}
+
+/* ---- Bottom Navigation ---- */
+.bottom-nav {
+    display: flex;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background: none;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    transition: color 0.2s;
+    font-family: inherit;
+}
+
+.tab-btn.active {
+    color: var(--era-color);
+}
+
+.tab-btn .tab-icon {
+    font-size: 1.2rem;
+}
+
+/* ---- Click Floater Animation ---- */
+.click-floater {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--era-color);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    animation: float-up 0.8s ease-out forwards;
+    z-index: 100;
+}
+
+@keyframes float-up {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-60px); }
+}
+
+/* ---- Toast ---- */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 90%;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+.toast {
+    background: rgba(30, 30, 30, 0.95);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ---- Tutorial Overlay ---- */
+.tutorial-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 16px 100px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tutorial-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tutorial-bubble {
+    background: rgba(20, 20, 40, 0.95);
+    border: 1px solid var(--era-color);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    max-width: 350px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.tutorial-bubble strong {
+    color: var(--era-color);
+}
+
+.tutorial-dismiss {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    background: none;
+    font-family: inherit;
+}
+
+/* ---- Tutorial Highlight ---- */
+.tutorial-highlight {
+    position: relative;
+    z-index: 160;
+    animation: tutorial-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tutorial-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(139, 115, 85, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(139, 115, 85, 0); }
+}
+
+/* ---- Legacy Panel (placeholder) ---- */
+.legacy-locked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+    text-align: center;
+    gap: 12px;
+}
+
+.legacy-locked .lock-icon {
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.legacy-locked .lock-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    max-width: 250px;
+    line-height: 1.5;
+}
+
+/* ---- Scrollbar ---- */
+.tab-panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.tab-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
