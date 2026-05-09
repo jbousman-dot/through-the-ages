@@ -136,6 +136,10 @@ function init() {
         }
     });
 
+    // Auth buttons
+    document.getElementById("sign-in-btn").addEventListener("click", signInWithGoogle);
+    document.getElementById("sign-out-btn").addEventListener("click", signOut);
+
     // Display name
     const nameInput = document.getElementById("display-name-input");
     nameInput.value = GameState.displayName || "";

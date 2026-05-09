@@ -267,9 +267,12 @@ async function renderLeaderboard() {
     for (const entry of entries) {
         const eraName = ERAS[entry.highestEra] ? ERAS[entry.highestEra].name : "?";
         const highlight = entry.isCurrentUser ? ' lb-current' : '';
+        const avatar = entry.photoURL
+            ? `<img src="${escapeHtml(entry.photoURL)}" class="lb-avatar" referrerpolicy="no-referrer">`
+            : '';
         html += `<div class="lb-row${highlight}">
             <span class="lb-rank">${entry.rank}</span>
-            <span class="lb-name">${escapeHtml(entry.displayName || 'Anonymous')}</span>
+            <span class="lb-name">${avatar}${escapeHtml(entry.displayName || 'Anonymous')}</span>
             <span class="lb-era">${eraName}</span>
             <span class="lb-score">${formatNumber(entry.totalKnowledge)}</span>
         </div>`;

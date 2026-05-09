@@ -649,6 +649,76 @@ html, body {
     position: relative;
 }
 
+/* ---- User Profile ---- */
+.user-info {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--era-color);
+}
+
+.user-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--era-color);
+    font-size: 1.2rem;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.user-email {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+.user-offline {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(66, 133, 244, 0.1) !important;
+    border-color: rgba(66, 133, 244, 0.3) !important;
+    color: #8ab4f8 !important;
+}
+
+.google-btn:active {
+    background: rgba(66, 133, 244, 0.2) !important;
+}
+
+.google-icon {
+    flex-shrink: 0;
+}
+
 /* ---- Name Input ---- */
 .name-input-row {
     display: flex;
@@ -727,6 +797,16 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lb-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .lb-era {
