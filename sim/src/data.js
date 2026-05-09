@@ -15,7 +15,7 @@ export const ERAS = [
 ];
 
 export const UPGRADES = [
-    // ========== STONE AGE (era 0) ==========
+    // Stone Age (era 0)
     { id: "sharp_stones", era: 0, baseCost: 10, costMultiplier: 1.5, maxCount: 10, effect: "clickPower", effectValue: 1 },
     { id: "fire", era: 0, baseCost: 25, costMultiplier: 1.6, maxCount: 10, effect: "autoGen", effectValue: 0.5 },
     { id: "language", era: 0, baseCost: 100, costMultiplier: 3, maxCount: 1, effect: "clickMultiplier", effectValue: 2 },
@@ -24,8 +24,7 @@ export const UPGRADES = [
     { id: "tribal_council", era: 0, baseCost: 500, costMultiplier: 4, maxCount: 1, effect: "autoMultiplier", effectValue: 2 },
     { id: "bone_tools", era: 0, baseCost: 300, costMultiplier: 2, maxCount: 5, effect: "clickPower", effectValue: 3 },
     { id: "hunting", era: 0, baseCost: 600, costMultiplier: 2.2, maxCount: 5, effect: "autoGen", effectValue: 5 },
-
-    // ========== BRONZE AGE (era 1) ==========
+    // Bronze Age (era 1)
     { id: "agriculture", era: 1, baseCost: 50, costMultiplier: 1.6, maxCount: 10, effect: "autoGen", effectValue: 10 },
     { id: "writing", era: 1, baseCost: 200, costMultiplier: 3, maxCount: 1, effect: "clickMultiplier", effectValue: 3 },
     { id: "pottery", era: 1, baseCost: 100, costMultiplier: 1.7, maxCount: 8, effect: "clickPower", effectValue: 5 },
@@ -34,8 +33,7 @@ export const UPGRADES = [
     { id: "wheel", era: 1, baseCost: 2000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 2 },
     { id: "trade_routes", era: 1, baseCost: 3000, costMultiplier: 2.2, maxCount: 5, effect: "autoGen", effectValue: 50 },
     { id: "mathematics", era: 1, baseCost: 10000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 3 },
-
-    // ========== IRON AGE (era 2) ==========
+    // Iron Age (era 2)
     { id: "iron_smelting", era: 2, baseCost: 500, costMultiplier: 1.7, maxCount: 10, effect: "autoGen", effectValue: 100 },
     { id: "philosophy", era: 2, baseCost: 1000, costMultiplier: 1.8, maxCount: 8, effect: "clickPower", effectValue: 20 },
     { id: "coinage", era: 2, baseCost: 3000, costMultiplier: 4, maxCount: 1, effect: "clickMultiplier", effectValue: 2 },
@@ -44,4 +42,58 @@ export const UPGRADES = [
     { id: "democracy", era: 2, baseCost: 50000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 3 },
     { id: "navy", era: 2, baseCost: 100000, costMultiplier: 2.5, maxCount: 5, effect: "autoGen", effectValue: 2000 },
     { id: "siege_warfare", era: 2, baseCost: 200000, costMultiplier: 5, maxCount: 1, effect: "clickMultiplier", effectValue: 5 },
+    // Classical (era 3)
+    { id: "aqueducts", era: 3, baseCost: 500, costMultiplier: 1.7, maxCount: 10, effect: "autoGen", effectValue: 500 },
+    { id: "rhetoric", era: 3, baseCost: 1000, costMultiplier: 1.8, maxCount: 8, effect: "clickPower", effectValue: 100 },
+    { id: "roman_law", era: 3, baseCost: 5000, costMultiplier: 4, maxCount: 1, effect: "clickMultiplier", effectValue: 3 },
+    { id: "senate", era: 3, baseCost: 8000, costMultiplier: 2.5, maxCount: 5, effect: "scholar", effectValue: 20 },
+    { id: "concrete", era: 3, baseCost: 25000, costMultiplier: 2.0, maxCount: 5, effect: "autoGen", effectValue: 2000 },
+    { id: "republic", era: 3, baseCost: 100000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 3 },
+    { id: "postal_system", era: 3, baseCost: 500000, costMultiplier: 2.2, maxCount: 5, effect: "autoGen", effectValue: 5000 },
+    { id: "colosseum", era: 3, baseCost: 2000000, costMultiplier: 5, maxCount: 1, effect: "clickMultiplier", effectValue: 5 },
+    // Medieval (era 4)
+    { id: "monasteries", era: 4, baseCost: 5000, costMultiplier: 1.7, maxCount: 10, effect: "autoGen", effectValue: 5000 },
+    { id: "feudal_system", era: 4, baseCost: 20000, costMultiplier: 2.5, maxCount: 5, effect: "scholar", effectValue: 50 },
+    { id: "cathedrals", era: 4, baseCost: 50000, costMultiplier: 4, maxCount: 1, effect: "clickMultiplier", effectValue: 4 },
+    { id: "guilds", era: 4, baseCost: 100000, costMultiplier: 3, maxCount: 3, effect: "costReduction", effectValue: 0.15 },
+    { id: "universities", era: 4, baseCost: 500000, costMultiplier: 2.0, maxCount: 5, effect: "autoGen", effectValue: 20000 },
+    { id: "compass", era: 4, baseCost: 1000000, costMultiplier: 1.8, maxCount: 8, effect: "clickPower", effectValue: 500 },
+    { id: "crusades", era: 4, baseCost: 10000000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 4 },
+    { id: "magna_carta", era: 4, baseCost: 50000000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 5 },
+    // Renaissance (era 5)
+    { id: "printing_press", era: 5, baseCost: 50000, costMultiplier: 1.7, maxCount: 10, effect: "autoGen", effectValue: 50000 },
+    { id: "perspective", era: 5, baseCost: 200000, costMultiplier: 4, maxCount: 1, effect: "clickMultiplier", effectValue: 5 },
+    { id: "banking", era: 5, baseCost: 500000, costMultiplier: 3, maxCount: 3, effect: "costReduction", effectValue: 0.20 },
+    { id: "patronage", era: 5, baseCost: 1000000, costMultiplier: 2.5, maxCount: 5, effect: "scholar", effectValue: 150 },
+    { id: "scientific_method", era: 5, baseCost: 10000000, costMultiplier: 2.0, maxCount: 5, effect: "autoGen", effectValue: 200000 },
+    { id: "alchemy", era: 5, baseCost: 5000000, costMultiplier: 1.8, maxCount: 8, effect: "clickPower", effectValue: 2000 },
+    { id: "observatory", era: 5, baseCost: 50000000, costMultiplier: 3, maxCount: 3, effect: "offlineMultiplier", effectValue: 0.25 },
+    { id: "enlightenment", era: 5, baseCost: 1000000000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 10 },
+    // Industrial (era 6)
+    { id: "steam_engine", era: 6, baseCost: 500000, costMultiplier: 1.7, maxCount: 10, effect: "autoGen", effectValue: 500000 },
+    { id: "factory_system", era: 6, baseCost: 5000000, costMultiplier: 2.5, maxCount: 5, effect: "scholar", effectValue: 500 },
+    { id: "telegraph", era: 6, baseCost: 10000000, costMultiplier: 4, maxCount: 1, effect: "clickMultiplier", effectValue: 5 },
+    { id: "assembly_line", era: 6, baseCost: 50000000, costMultiplier: 3, maxCount: 3, effect: "costReduction", effectValue: 0.25 },
+    { id: "railroad", era: 6, baseCost: 500000000, costMultiplier: 2.0, maxCount: 5, effect: "autoGen", effectValue: 2000000 },
+    { id: "dynamo", era: 6, baseCost: 100000000, costMultiplier: 1.8, maxCount: 8, effect: "clickPower", effectValue: 10000 },
+    { id: "heritage_museum", era: 6, baseCost: 2000000000, costMultiplier: 3, maxCount: 2, effect: "heritageMult", effectValue: 2 },
+    { id: "revolution", era: 6, baseCost: 20000000000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 20 },
+    // Modern (era 7)
+    { id: "electricity_grid", era: 7, baseCost: 5000000, costMultiplier: 1.7, maxCount: 10, effect: "autoGen", effectValue: 5000000 },
+    { id: "radio", era: 7, baseCost: 50000000, costMultiplier: 1.8, maxCount: 8, effect: "clickPower", effectValue: 50000 },
+    { id: "computers", era: 7, baseCost: 500000000, costMultiplier: 4, maxCount: 1, effect: "clickMultiplier", effectValue: 10 },
+    { id: "internet", era: 7, baseCost: 5000000000, costMultiplier: 2.5, maxCount: 5, effect: "scholar", effectValue: 2000 },
+    { id: "satellites", era: 7, baseCost: 50000000000, costMultiplier: 2.0, maxCount: 5, effect: "autoGen", effectValue: 50000000 },
+    { id: "mass_media", era: 7, baseCost: 10000000000, costMultiplier: 3, maxCount: 3, effect: "globalMultiplier", effectValue: 1.5 },
+    { id: "quantum_computing", era: 7, baseCost: 200000000000, costMultiplier: 3, maxCount: 3, effect: "costReduction", effectValue: 0.30 },
+    { id: "singularity", era: 7, baseCost: 2000000000000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 50 },
+    // Future (era 8)
+    { id: "fusion_power", era: 8, baseCost: 1000000000, costMultiplier: 1.7, maxCount: 10, effect: "autoGen", effectValue: 500000000 },
+    { id: "neural_link", era: 8, baseCost: 10000000000, costMultiplier: 1.8, maxCount: 8, effect: "clickPower", effectValue: 500000 },
+    { id: "dyson_sphere", era: 8, baseCost: 100000000000, costMultiplier: 4, maxCount: 1, effect: "clickMultiplier", effectValue: 20 },
+    { id: "matrioshka_brain", era: 8, baseCost: 500000000000, costMultiplier: 2.5, maxCount: 5, effect: "scholar", effectValue: 10000 },
+    { id: "warp_drive", era: 8, baseCost: 5000000000000, costMultiplier: 2.0, maxCount: 5, effect: "autoGen", effectValue: 5000000000 },
+    { id: "time_manipulation", era: 8, baseCost: 1000000000000, costMultiplier: 3, maxCount: 3, effect: "globalMultiplier", effectValue: 2 },
+    { id: "universal_knowledge", era: 8, baseCost: 50000000000000, costMultiplier: 5, maxCount: 1, effect: "autoMultiplier", effectValue: 100 },
+    { id: "transcendence_upgrade", era: 8, baseCost: 100000000000000, costMultiplier: 5, maxCount: 1, effect: "globalMultiplier", effectValue: 3 },
 ];

@@ -64,12 +64,7 @@
 
             <!-- Legacy Panel -->
             <div class="tab-panel" id="panel-legacy">
-                <div class="legacy-locked">
-                    <div class="lock-icon">🔒</div>
-                    <div class="lock-text">
-                        Legacy powers unlock after your civilization reaches the Classical era and undergoes a Cultural Revolution.
-                    </div>
-                </div>
+                <div id="legacy-content"></div>
             </div>
 
             <!-- Settings Panel -->
@@ -103,6 +98,7 @@
             <button class="tab-btn" data-tab="legacy">
                 <span class="tab-icon">🏛️</span>
                 Legacy
+                <span class="tab-badge" id="legacy-badge"></span>
             </button>
             <button class="tab-btn" data-tab="settings">
                 <span class="tab-icon">⚙️</span>
@@ -126,6 +122,7 @@
     <script src="js/game-state.js"></script>
     <script src="js/upgrades.js"></script>
     <script src="js/prestige.js"></script>
+    <script src="js/achievements.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/tutorial.js"></script>
     <script src="js/main.js"></script>

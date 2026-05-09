@@ -13,6 +13,7 @@ function switchTab(tab) {
     document.querySelector(`.tab-btn[data-tab="${tab}"]`).classList.add("active");
 
     if (tab === "inventions") renderUpgradeList();
+    if (tab === "legacy") renderLegacyPanel();
     if (tab === "settings") renderStats();
 }
 
@@ -143,6 +144,90 @@ function showOfflineSummary(seconds, gained) {
     showToast(`Welcome back! Your scholars generated ${formatNumber(gained)} knowledge in ${timeStr}.`, 5000);
 }
 
+// --- Legacy Panel ---
+function renderLegacyPanel() {
+    const container = document.getElementById("legacy-content");
+
+    let html = `
+        <div class="heritage-header">
+            <span class="heritage-icon">🏛️</span>
+            <span class="heritage-label">Heritage Points</span>
+            <span class="heritage-amount">${GameState.heritagePoints}</span>
+        </div>
+        <div class="heritage-total">Total earned: ${GameState.totalHeritageEarned}</div>
+    `;
+
+    // Heritage bonuses
+    html += `<h3 class="legacy-section-title">Heritage Bonuses</h3>`;
+    html += `<div class="heritage-bonus-list">`;
+
+    for (const bonus of HERITAGE_BONUSES) {
+        const count = getHeritageBonusCount(bonus);
+        const maxed = count >= bonus.maxCount;
+        const affordable = canAffordHeritage(bonus);
+
+        html += `
+            <button class="upgrade-card heritage-card ${maxed ? 'maxed' : ''} ${affordable && !maxed ? 'affordable' : ''}"
+                    data-heritage-id="${bonus.id}" ${maxed ? 'disabled' : ''}>
+                <div class="upgrade-icon">${bonus.icon}</div>
+                <div class="upgrade-info">
+                    <div class="upgrade-name">${bonus.name}</div>
+                    <div class="upgrade-desc">${bonus.description}</div>
+                </div>
+                <div class="upgrade-cost-area">
+                    ${maxed
+                        ? '<span class="upgrade-maxed">MAX</span>'
+                        : `<span class="upgrade-cost ${affordable ? '' : 'too-expensive'}">${bonus.cost} HP</span>`
+                    }
+                    <span class="upgrade-count">${count}/${bonus.maxCount}</span>
+                </div>
+            </button>
+        `;
+    }
+    html += `</div>`;
+
+    // Achievements
+    html += `<h3 class="legacy-section-title">Achievements (${getAchievementCount()}/${ACHIEVEMENTS.length})</h3>`;
+    html += `<div class="achievement-grid">`;
+
+    for (const ach of ACHIEVEMENTS) {
+        const unlocked = !!GameState.achievements[ach.id];
+        html += `
+            <div class="achievement-tile ${unlocked ? 'unlocked' : 'locked'}" title="${unlocked ? ach.name + ': ' + ach.description : '???'}">
+                <span class="achievement-icon">${unlocked ? ach.icon : '🔒'}</span>
+                <span class="achievement-name">${unlocked ? ach.name : '???'}</span>
+            </div>
+        `;
+    }
+    html += `</div>`;
+
+    container.innerHTML = html;
+
+    // Bind heritage purchase handlers
+    container.querySelectorAll(".heritage-card:not(.maxed)").forEach(card => {
+        card.addEventListener("click", () => {
+            const id = card.dataset.heritageId;
+            const bonus = HERITAGE_BONUSES.find(b => b.id === id);
+            if (bonus && purchaseHeritageBonus(bonus)) {
+                animatePurchase(card);
+                renderLegacyPanel();
+                showToast(`${bonus.icon} ${bonus.name} upgraded!`);
+            }
+        });
+    });
+}
+
+function updateLegacyBadge() {
+    const badge = document.getElementById("legacy-badge");
+    if (!badge) return;
+    if (GameState.heritagePoints > 0) {
+        badge.textContent = GameState.heritagePoints;
+        badge.classList.add("visible");
+    } else {
+        badge.classList.remove("visible");
+    }
+}
+
 // --- Settings Panel ---
 function renderStats() {
     const stats = document.getElementById("stats-content");
@@ -157,6 +242,9 @@ function renderStats() {
         <div class="stat-row"><span>Knowledge/sec</span><span>${formatNumber(GameState.knowledgePerSecond)}</span></div>
         <div class="stat-row"><span>Scholars</span><span>${GameState.scholars}</span></div>
         <div class="stat-row"><span>Era</span><span>${ERAS[GameState.currentEra].name}</span></div>
+        <div class="stat-row"><span>Heritage Points</span><span>${GameState.heritagePoints} (${GameState.totalHeritageEarned} earned)</span></div>
+        <div class="stat-row"><span>Achievements</span><span>${getAchievementCount()}/${ACHIEVEMENTS.length}</span></div>
+        <div class="stat-row"><span>Era Advances</span><span>${GameState.totalPrestiges}</span></div>
         <div class="stat-row"><span>Play Time</span><span>${hours}h ${mins}m</span></div>
     `;
 }

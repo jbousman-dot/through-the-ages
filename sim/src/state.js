@@ -14,8 +14,16 @@ export function createFreshState() {
         legacy: 0,
         wisdom: 0,
         epochs: 0,
-        upgrades: {},       // { upgradeId: count }
+        heritagePoints: 0,
+        heritageSpent: {},
+        totalHeritageEarned: 0,
+        upgrades: {},
         totalClicks: 0,
         totalPrestiges: 0,
+        totalUpgradesPurchased: 0,
+        costReduction: 0,
+        offlineBonus: 0,
+        heritageMultiplier: 1,
+        globalMultiplier: 1,
     };
 }

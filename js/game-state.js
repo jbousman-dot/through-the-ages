@@ -22,15 +22,31 @@ const GameState = {
     wisdom: 0,               // from Collapse & Rebirth (prestige 3)
     epochs: 0,               // from Transcendence (prestige 4)
 
+    // --- Heritage Points ---
+    heritagePoints: 0,
+    heritageSpent: {},       // { bonusId: purchaseCount }
+    totalHeritageEarned: 0,
+
     // --- Upgrades purchased ---
     upgrades: {},            // { upgradeId: purchaseCount }
+
+    // --- Achievements ---
+    achievements: {},        // { achievementId: unlockTimestamp }
+
+    // --- Computed meta-stats (recalculated, not saved) ---
+    costReduction: 0,
+    offlineBonus: 0,
+    heritageMultiplier: 1,
+    globalMultiplier: 1,
 
     // --- Meta ---
     totalClicks: 0,
     totalPrestiges: 0,
+    totalUpgradesPurchased: 0,
     startTime: Date.now(),
     lastSave: Date.now(),
     lastTick: Date.now(),
+    eraStartTime: Date.now(),
 
     // --- Tutorial ---
     tutorialStep: 0,
@@ -126,12 +142,18 @@ function saveGame() {
         legacy: GameState.legacy,
         wisdom: GameState.wisdom,
         epochs: GameState.epochs,
+        heritagePoints: GameState.heritagePoints,
+        heritageSpent: GameState.heritageSpent,
+        totalHeritageEarned: GameState.totalHeritageEarned,
         upgrades: GameState.upgrades,
+        achievements: GameState.achievements,
         totalClicks: GameState.totalClicks,
         totalPrestiges: GameState.totalPrestiges,
+        totalUpgradesPurchased: GameState.totalUpgradesPurchased,
         startTime: GameState.startTime,
         lastSave: Date.now(),
         lastTick: Date.now(),
+        eraStartTime: GameState.eraStartTime,
         tutorialStep: GameState.tutorialStep,
         tutorialComplete: GameState.tutorialComplete,
     };
@@ -149,11 +171,12 @@ function loadGame() {
         const data = JSON.parse(raw);
         Object.assign(GameState, data);
 
-        // Calculate offline progress (capped at 4 hours)
+        // Calculate offline progress (capped at 8 hours)
         const now = Date.now();
-        const elapsed = Math.min((now - GameState.lastTick) / 1000, 14400);
+        const elapsed = Math.min((now - GameState.lastTick) / 1000, 28800);
         if (elapsed > 5 && GameState.knowledgePerSecond > 0) {
-            const offlineGain = GameState.knowledgePerSecond * elapsed * 0.5; // 50% efficiency
+            const offlineEff = 0.5 + (GameState.offlineBonus || 0);
+            const offlineGain = GameState.knowledgePerSecond * elapsed * Math.min(offlineEff, 0.95);
             GameState.knowledge += offlineGain;
             GameState.totalKnowledge += offlineGain;
             // Show offline summary after UI is ready
@@ -165,7 +188,8 @@ function loadGame() {
 
         // Sanitize numeric fields against corruption
         const numericFields = ["knowledge","totalKnowledge","knowledgePerClick","knowledgePerSecond",
-            "population","scholars","legacy","wisdom","epochs","totalClicks","totalPrestiges"];
+            "population","scholars","legacy","wisdom","epochs","totalClicks","totalPrestiges",
+            "heritagePoints","totalHeritageEarned","totalUpgradesPurchased"];
         for (const f of numericFields) {
             if (typeof GameState[f] !== "number" || isNaN(GameState[f])) GameState[f] = 0;
         }

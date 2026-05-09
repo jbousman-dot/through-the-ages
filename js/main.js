@@ -4,8 +4,9 @@
 
 let lastFrame = 0;
 let saveTimer = 0;
+let achievementTimer = 0;
 const SAVE_INTERVAL = 30000; // 30 seconds
-const TICK_RATE = 100; // ms between updates
+const ACHIEVEMENT_CHECK_INTERVAL = 1000; // 1 second
 
 // --- Game Loop ---
 function gameLoop(timestamp) {
@@ -26,6 +27,13 @@ function gameLoop(timestamp) {
     // Update UI (throttle to ~10fps for DOM updates)
     saveTimer += delta * 1000;
     updateResourceDisplay();
+
+    // Achievement checking (throttled to 1/sec)
+    achievementTimer += delta * 1000;
+    if (achievementTimer >= ACHIEVEMENT_CHECK_INTERVAL) {
+        achievementTimer = 0;
+        checkAchievements();
+    }
 
     // Auto-save
     if (saveTimer >= SAVE_INTERVAL) {
@@ -96,7 +104,12 @@ function init() {
 
     // Bind advance era button
     document.getElementById("advance-era-btn").addEventListener("click", () => {
-        if (canAdvanceEra()) advanceEra();
+        if (canAdvanceEra()) {
+            advanceEra();
+            checkSpeedAchievements();
+            checkAchievements();
+            updateLegacyBadge();
+        }
     });
 
     // Bind settings buttons
@@ -127,6 +140,7 @@ function init() {
     updateEraDisplay();
     updateResourceDisplay();
     renderUpgradeList();
+    updateLegacyBadge();
 
     // Start tutorial for new games
     if (!loaded || !GameState.tutorialComplete) {

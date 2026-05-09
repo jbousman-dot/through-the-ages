@@ -17,7 +17,7 @@ function strategyCheapest(state) {
     for (const upg of eraUpgrades) {
         const count = state.upgrades[upg.id] || 0;
         if (count >= upg.maxCount) continue;
-        const cost = getUpgradeCost(upg, count);
+        const cost = getUpgradeCost(upg, count, state.costReduction || 0);
         if (cost < bestCost && state.knowledge >= cost) {
             best = upg;
             bestCost = cost;
@@ -39,16 +39,21 @@ function strategyEfficient(state) {
     for (const upg of eraUpgrades) {
         const count = state.upgrades[upg.id] || 0;
         if (count >= upg.maxCount) continue;
-        const cost = getUpgradeCost(upg, count);
+        const cost = getUpgradeCost(upg, count, state.costReduction || 0);
         if (state.knowledge < cost) continue;
 
         // Weight multipliers higher than flat bonuses
         let value = upg.effectValue;
         if (upg.effect === "clickMultiplier" || upg.effect === "autoMultiplier") {
-            value = upg.effectValue * 10; // multipliers are much more impactful
-        }
-        if (upg.effect === "scholar") {
-            value = upg.effectValue * 2; // scholars have compounding value
+            value = upg.effectValue * 10;
+        } else if (upg.effect === "globalMultiplier") {
+            value = upg.effectValue * 20; // most impactful
+        } else if (upg.effect === "costReduction") {
+            value = upg.effectValue * 8;
+        } else if (upg.effect === "scholar") {
+            value = upg.effectValue * 2;
+        } else if (upg.effect === "heritageMult") {
+            value = upg.effectValue * 5;
         }
 
         const ratio = value / cost;
@@ -72,7 +77,7 @@ function strategyPrioritized(state) {
     const eraUpgrades = UPGRADES.filter(u => u.era === state.currentEra);
 
     // Priority ordering
-    const priorityOrder = ["autoMultiplier", "clickMultiplier", "autoGen", "scholar", "clickPower"];
+    const priorityOrder = ["globalMultiplier", "autoMultiplier", "clickMultiplier", "costReduction", "autoGen", "scholar", "clickPower", "heritageMult", "offlineMultiplier"];
 
     for (const effectType of priorityOrder) {
         // Get all upgrades of this type, sorted by effectValue descending
@@ -82,7 +87,7 @@ function strategyPrioritized(state) {
 
         for (const upg of candidates) {
             const count = state.upgrades[upg.id] || 0;
-            const cost = getUpgradeCost(upg, count);
+            const cost = getUpgradeCost(upg, count, state.costReduction || 0);
             if (state.knowledge >= cost) {
                 purchaseUpgrade(state, upg);
                 return; // one purchase per tick

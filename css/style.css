@@ -537,27 +537,116 @@ html, body {
     50% { box-shadow: 0 0 0 8px rgba(139, 115, 85, 0); }
 }
 
-/* ---- Legacy Panel (placeholder) ---- */
-.legacy-locked {
+/* ---- Legacy Panel ---- */
+.heritage-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.heritage-icon { font-size: 1.5rem; }
+.heritage-label { flex: 1; }
+.heritage-amount {
+    font-size: 1.4rem;
+    color: #DAA520;
+    font-weight: 800;
+}
+
+.heritage-total {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+}
+
+.legacy-section-title {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 20px 0 10px;
+}
+
+.heritage-bonus-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.heritage-card {
+    border-color: rgba(218, 165, 32, 0.2) !important;
+}
+
+.heritage-card.affordable {
+    border-color: #DAA520 !important;
+}
+
+/* ---- Achievement Grid ---- */
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+    padding-bottom: 20px;
+}
+
+.achievement-tile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 60%;
+    gap: 4px;
+    padding: 10px 6px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     text-align: center;
-    gap: 12px;
 }
 
-.legacy-locked .lock-icon {
-    font-size: 3rem;
-    opacity: 0.3;
+.achievement-tile.unlocked {
+    border-color: rgba(218, 165, 32, 0.3);
+    background: rgba(218, 165, 32, 0.08);
 }
 
-.legacy-locked .lock-text {
-    font-size: 0.9rem;
+.achievement-tile.locked {
+    opacity: 0.4;
+}
+
+.achievement-icon {
+    font-size: 1.5rem;
+}
+
+.achievement-name {
+    font-size: 0.6rem;
     color: var(--text-secondary);
-    max-width: 250px;
-    line-height: 1.5;
+    line-height: 1.2;
+}
+
+/* ---- Tab Badge ---- */
+.tab-badge {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 50%;
+    transform: translateX(16px);
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    background: #DAA520;
+    color: #000;
+    font-size: 0.55rem;
+    font-weight: 800;
+    line-height: 16px;
+    text-align: center;
+    padding: 0 4px;
+}
+
+.tab-badge.visible {
+    display: block;
+}
+
+.tab-btn {
+    position: relative;
 }
 
 /* ---- Scrollbar ---- */
