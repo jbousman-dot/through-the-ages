@@ -1,7 +1,6 @@
 // ============================================================
 // firebase-sync.js — Cloud saves & leaderboards via Firebase
-//   Auth handled by Cloudflare Access (Google OAuth at the edge)
-//   User identity read from CF_Authorization JWT cookie
+//   Auth: anonymous-first, optional Google sign-in for cross-device sync
 // ============================================================
 
 const FIREBASE_CONFIG = {
@@ -14,7 +13,9 @@ const FIREBASE_CONFIG = {
 };
 
 let firebaseDb = null;
-let cfUser = null;       // { email, name, userId }
+let firebaseAuth = null;
+let googleProvider = null;
+let currentAuthUser = null;  // { uid, email, name, photoURL, isAnonymous }
 let cloudSyncEnabled = false;
 
 // --- Initialize ---
@@ -27,22 +28,35 @@ async function initFirebase() {
 
         firebase.initializeApp(FIREBASE_CONFIG);
         firebaseDb = firebase.firestore();
+        firebaseAuth = firebase.auth();
+        googleProvider = new firebase.auth.GoogleAuthProvider();
 
-        // Get user identity from Cloudflare Access JWT
-        cfUser = getCfAccessUser();
+        // Wait for auth state
+        await new Promise((resolve) => {
+            const unsub = firebaseAuth.onAuthStateChanged(async (user) => {
+                unsub();
+                if (user) {
+                    currentAuthUser = _mapUser(user);
+                } else {
+                    // Silent anonymous sign-in — zero friction
+                    try {
+                        const cred = await firebaseAuth.signInAnonymously();
+                        currentAuthUser = _mapUser(cred.user);
+                    } catch (e) {
+                        console.warn("Anonymous auth failed:", e);
+                        currentAuthUser = null;
+                    }
+                }
+                resolve();
+            });
+        });
 
-        if (cfUser) {
+        if (currentAuthUser) {
             cloudSyncEnabled = true;
-            console.log("Cloudflare Access user:", cfUser.email);
-
-            // Use email as display name if not already set
-            if (!GameState.displayName) {
-                GameState.displayName = cfUser.name || cfUser.email.split("@")[0];
+            if (!GameState.displayName && currentAuthUser.name !== "Anonymous") {
+                GameState.displayName = currentAuthUser.name;
             }
-
             loadCloudSave();
-        } else {
-            console.log("No Cloudflare Access session — playing offline");
         }
 
         updateAuthUI();
@@ -53,37 +67,68 @@ async function initFirebase() {
     }
 }
 
-// --- Read Cloudflare Access JWT ---
-function getCfAccessUser() {
+function _mapUser(user) {
+    return {
+        uid: user.uid,
+        email: user.email || "",
+        name: user.displayName || (user.email ? user.email.split("@")[0] : "Anonymous"),
+        photoURL: user.photoURL || "",
+        isAnonymous: user.isAnonymous,
+    };
+}
+
+// --- Google Sign-In (link anonymous account or fresh sign-in) ---
+async function signInWithGoogle() {
+    if (!firebaseAuth) return;
     try {
-        const cookie = document.cookie.split(";")
-            .map(c => c.trim())
-            .find(c => c.startsWith("CF_Authorization="));
-
-        if (!cookie) return null;
-
-        const token = cookie.split("=")[1];
-        // Decode JWT payload (base64url)
-        const payload = token.split(".")[1];
-        const decoded = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
-
-        return {
-            email: decoded.email || "",
-            name: decoded.name || decoded.email?.split("@")[0] || "Player",
-            userId: decoded.sub || decoded.email || "",
-            photoURL: decoded.picture || "",
-        };
+        if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
+            // Link anonymous account to Google — preserves UID and cloud data
+            await firebaseAuth.currentUser.linkWithPopup(googleProvider);
+            currentAuthUser = _mapUser(firebaseAuth.currentUser);
+        } else {
+            await firebaseAuth.signInWithPopup(googleProvider);
+            currentAuthUser = _mapUser(firebaseAuth.currentUser);
+        }
+        cloudSyncEnabled = true;
+        if (!GameState.displayName || GameState.displayName === "Anonymous") {
+            GameState.displayName = currentAuthUser.name;
+        }
+        updateAuthUI();
+        saveToCloud();
+        updateLeaderboard();
+        showToast("Signed in as " + currentAuthUser.email, 3000);
     } catch (e) {
-        console.warn("Could not read CF Access JWT:", e);
-        return null;
+        if (e.code === "auth/credential-already-in-use") {
+            // Google account already linked to a different anonymous account
+            if (confirm("This Google account already has a save. Load it? (Current progress will be lost)")) {
+                const cred = e.credential;
+                await firebaseAuth.signInWithCredential(cred);
+                currentAuthUser = _mapUser(firebaseAuth.currentUser);
+                cloudSyncEnabled = true;
+                await loadCloudSave();
+                updateAuthUI();
+                showToast("Cloud save loaded!", 3000);
+            }
+        } else {
+            console.warn("Google sign-in failed:", e);
+            showToast("Sign-in failed", 3000);
+        }
     }
 }
 
-// --- Generate a safe document ID from email ---
+function signOut() {
+    if (!firebaseAuth) return;
+    firebaseAuth.signOut();
+    currentAuthUser = null;
+    cloudSyncEnabled = false;
+    updateAuthUI();
+    showToast("Signed out — playing locally", 3000);
+}
+
+// --- User Document ID (use Firebase UID directly) ---
 function getUserDocId() {
-    if (!cfUser) return null;
-    // Use a hash of the email for the doc ID (Firestore-safe)
-    return cfUser.email.replace(/[^a-zA-Z0-9]/g, "_");
+    if (!currentAuthUser) return null;
+    return currentAuthUser.uid;
 }
 
 // --- Update Auth UI ---
@@ -91,28 +136,36 @@ function updateAuthUI() {
     const userInfo = document.getElementById("user-info");
     const cloudSaveBtn = document.getElementById("cloud-save-btn");
     const nameInput = document.getElementById("display-name-input");
+    const signInBtn = document.getElementById("sign-in-btn");
+    const signOutBtn = document.getElementById("sign-out-btn");
 
-    if (cfUser) {
+    if (currentAuthUser && !currentAuthUser.isAnonymous) {
+        // Signed in with Google
         if (cloudSaveBtn) cloudSaveBtn.style.display = "block";
+        if (signInBtn) signInBtn.style.display = "none";
+        if (signOutBtn) signOutBtn.style.display = "inline-block";
         if (userInfo) {
             userInfo.innerHTML = `
                 <div class="user-profile">
-                    ${cfUser.photoURL
-                        ? `<img src="${escapeHtmlSync(cfUser.photoURL)}" class="user-avatar" referrerpolicy="no-referrer">`
-                        : '<span class="user-avatar-placeholder">👤</span>'}
+                    ${currentAuthUser.photoURL
+                        ? `<img src="${escapeHtmlSync(currentAuthUser.photoURL)}" class="user-avatar" referrerpolicy="no-referrer">`
+                        : '<span class="user-avatar-placeholder">\uD83D\uDC64</span>'}
                     <div class="user-details">
-                        <span class="user-name">${escapeHtmlSync(cfUser.name)}</span>
-                        <span class="user-email">${escapeHtmlSync(cfUser.email)}</span>
+                        <span class="user-name">${escapeHtmlSync(currentAuthUser.name)}</span>
+                        <span class="user-email">${escapeHtmlSync(currentAuthUser.email)}</span>
                     </div>
                 </div>
             `;
             userInfo.style.display = "flex";
         }
-        if (nameInput) nameInput.value = GameState.displayName || cfUser.name || "";
+        if (nameInput) nameInput.value = GameState.displayName || currentAuthUser.name || "";
     } else {
-        if (cloudSaveBtn) cloudSaveBtn.style.display = "none";
+        // Anonymous or not signed in
+        if (cloudSaveBtn) cloudSaveBtn.style.display = currentAuthUser ? "block" : "none";
+        if (signInBtn) signInBtn.style.display = "inline-block";
+        if (signOutBtn) signOutBtn.style.display = "none";
         if (userInfo) {
-            userInfo.innerHTML = '<span class="user-offline">Not signed in — playing offline</span>';
+            userInfo.innerHTML = '<span class="user-offline">Playing locally \u2014 sign in to sync across devices</span>';
             userInfo.style.display = "flex";
         }
         if (nameInput) nameInput.value = GameState.displayName || "";
@@ -155,8 +208,8 @@ async function saveToCloud() {
             eraStartTime: GameState.eraStartTime,
             tutorialStep: GameState.tutorialStep,
             tutorialComplete: GameState.tutorialComplete,
-            displayName: GameState.displayName || cfUser.name || "Anonymous",
-            email: cfUser.email,
+            displayName: GameState.displayName || currentAuthUser.name || "Anonymous",
+            email: currentAuthUser.email || "anonymous",
         };
 
         await firebaseDb.collection("saves").doc(docId).set(saveData);
@@ -172,7 +225,6 @@ async function loadCloudSave() {
     try {
         const doc = await firebaseDb.collection("saves").doc(docId).get();
         if (!doc.exists) {
-            // First time — push local state to cloud
             saveToCloud();
             updateLeaderboard();
             return;
@@ -210,9 +262,9 @@ async function updateLeaderboard() {
 
     try {
         await firebaseDb.collection("leaderboard").doc(docId).set({
-            displayName: GameState.displayName || cfUser.name || "Anonymous",
-            photoURL: cfUser.photoURL || "",
-            email: cfUser.email,
+            displayName: GameState.displayName || (currentAuthUser ? currentAuthUser.name : "Anonymous"),
+            photoURL: currentAuthUser ? currentAuthUser.photoURL : "",
+            email: currentAuthUser ? currentAuthUser.email : "",
             highestEra: GameState.currentEra,
             totalKnowledge: GameState.totalKnowledge,
             totalClicks: GameState.totalClicks,
@@ -271,14 +323,4 @@ function setDisplayName(name) {
         saveToCloud();
         updateLeaderboard();
     }
-}
-
-// Stub for signInWithGoogle/signOut (auth handled by Cloudflare Access at the edge)
-function signInWithGoogle() {
-    // Cloudflare Access handles this — just reload to trigger the auth flow
-    window.location.reload();
-}
-function signOut() {
-    // Clear the CF Access session
-    window.location.href = "/cdn-cgi/access/logout";
 }
