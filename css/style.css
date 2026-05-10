@@ -602,12 +602,13 @@ html, body {
 .tutorial-dismiss {
     display: inline-block;
     margin-top: 12px;
-    padding: 8px 20px;
-    font-size: 0.75rem;
+    padding: 12px 24px;
+    min-height: 44px;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     cursor: pointer;
     border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 6px;
+    border-radius: 8px;
     background: none;
     font-family: inherit;
     font-weight: 500;
