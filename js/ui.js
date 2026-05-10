@@ -17,25 +17,45 @@ function switchTab(tab) {
     if (tab === "settings") renderStats();
 }
 
+// --- Efficient text update (only touches DOM when value changed) ---
+function _setText(el, val) { if (el && el.textContent !== val) el.textContent = val; }
+function _setWidth(el, val) { if (el && el.style.width !== val) el.style.width = val; }
+
+// Cache DOM references for the hot render path
+let _resEls = null;
+function _getResEls() {
+    if (!_resEls) {
+        _resEls = {
+            amount: document.getElementById("knowledge-amount"),
+            perClick: document.getElementById("knowledge-per-click"),
+            perSec: document.getElementById("knowledge-per-sec"),
+            pop: document.getElementById("population-amount"),
+            fill: document.getElementById("era-progress-fill"),
+            pct: document.getElementById("era-progress-text"),
+            advBtn: document.getElementById("advance-era-btn"),
+        };
+    }
+    return _resEls;
+}
+
 // --- Main Panel Updates ---
 function updateResourceDisplay() {
-    document.getElementById("knowledge-amount").textContent = formatNumber(GameState.knowledge);
-    document.getElementById("knowledge-per-click").textContent = `+${formatNumber(GameState.knowledgePerClick)}/click`;
-    document.getElementById("knowledge-per-sec").textContent = `${formatNumber(GameState.knowledgePerSecond)}/sec from scholars`;
-    document.getElementById("population-amount").textContent = formatNumber(Math.floor(GameState.population));
+    const el = _getResEls();
+    _setText(el.amount, formatNumber(GameState.knowledge));
+    _setText(el.perClick, `+${formatNumber(GameState.knowledgePerClick)}/click`);
+    _setText(el.perSec, `${formatNumber(GameState.knowledgePerSecond)}/sec from scholars`);
+    _setText(el.pop, formatNumber(Math.floor(GameState.population)));
 
     // Era progress
     const era = ERAS[GameState.currentEra];
     const progress = Math.min((GameState.totalKnowledge / era.knowledgeToAdvance) * 100, 100);
-    document.getElementById("era-progress-fill").style.width = `${progress}%`;
-    document.getElementById("era-progress-text").textContent = `${Math.floor(progress)}%`;
+    _setWidth(el.fill, `${progress}%`);
+    _setText(el.pct, `${Math.floor(progress)}%`);
 
     // Show advance button when ready
-    const advBtn = document.getElementById("advance-era-btn");
-    if (progress >= 100 && GameState.currentEra < ERAS.length - 1) {
-        advBtn.classList.add("visible");
-    } else {
-        advBtn.classList.remove("visible");
+    const shouldShow = progress >= 100 && GameState.currentEra < ERAS.length - 1;
+    if (shouldShow !== el.advBtn.classList.contains("visible")) {
+        el.advBtn.classList.toggle("visible", shouldShow);
     }
 }
 

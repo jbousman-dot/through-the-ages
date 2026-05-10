@@ -59,9 +59,12 @@ function renderUpgradeAffordability() {
         const upg = upgrades[i];
         if (isMaxed(upg)) continue;
         const affordable = canAfford(upg);
-        cards[i].classList.toggle("affordable", affordable);
-        const costEl = cards[i].querySelector(".upgrade-cost");
-        if (costEl) costEl.classList.toggle("too-expensive", !affordable);
+        // Only toggle when state actually changes
+        if (cards[i].classList.contains("affordable") !== affordable) {
+            cards[i].classList.toggle("affordable", affordable);
+            const costEl = cards[i].querySelector(".upgrade-cost");
+            if (costEl) costEl.classList.toggle("too-expensive", !affordable);
+        }
     }
 }
 
