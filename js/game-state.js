@@ -86,7 +86,7 @@ const ERAS = [
         name: "Classical",
         icon: "🏛️",
         description: "Wisdom shapes the world",
-        knowledgeToAdvance: 200000000,
+        knowledgeToAdvance: 300000000,
         color: "#E8D5B7",
         bgGradient: "linear-gradient(180deg, #1a1a3e 0%, #2d2d5e 40%, #e8d5b7 100%)",
     },
